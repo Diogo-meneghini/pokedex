@@ -25,7 +25,16 @@
                     rock: '#B69E31',
                     steel: '#B7B9D0',
                     water: '#6493EB'
-                }
+                },
+                stats:{
+                   attack: '',
+                   defense: '',
+                   specialAttack: '',
+                   specialDefense: '',
+                   hp: '',
+                   speed: ''
+                },
+                over: false
             }
         },
         props:['indice'],
@@ -48,18 +57,30 @@
                                     this.id = data.id
                                     this.types = [...data.types]
                                     this.img = data.sprites.other['official-artwork']["front_default"]
+                                    this.hp = data.stats[0]['base_stat']
+                                    this.attack = data.stats[1]['base_stat']
+                                    this.defense = data.stats[2]['base_stat']
+                                    this.specialAttack = data.stats[3]['base_stat']
+                                    this.specialDefense = data.stats[4]['base_stat']
+                                    this.speed = data.stats[5]['base_stat']
                                 })
                                 .catch(error=>{
                                     console.log(error)
                                 })
             },
+            mostrarConteudo(){
+                this.over = true
+            },
+            ocultarConteudo(){
+                this.over = false
+            }
         }
     }
 </script>
 
 <template>
-    <div class="card-container">
-        <div class="card">
+    <div @mouseover="mostrarConteudo" @mouseout="ocultarConteudo" class="card-container">
+        <div v-if="!over" class="card" id="base-card">
             <span class="numero">#{{ this.id }}</span>
             <img :src="img" alt="foto poke" width="130" height="130">
             <div class="tipos">
@@ -71,7 +92,14 @@
                 {{this.name}}
             </h3>
         </div>
-        
+        <div v-else class="card" id="card-stats">
+            <p>HP: {{ this.hp }}</p>
+            <p>Attack: {{ this.attack }}</p>
+            <p>Defense: {{ this.defense }}</p>
+            <p>Speed: {{ this.speed }}</p>
+            <p>Special Attack: {{ this.specialAttack }}</p>
+            <p>Special Defense: {{ this.specialDefense }}</p>
+        </div>
     </div>   
 </template>
 
@@ -89,10 +117,11 @@
         margin: 15px 15px;
         border-radius: 10px;
         display: flex;
-        align-items: center;
         flex-direction: column;
         box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.6);
-        
+    }
+    .card#base-card{
+        align-items: center;
     }
     .tipos ul li{
         list-style: none;
@@ -120,6 +149,13 @@
     }
     .card-container .card .tipos{
        display: flex; 
-        
+    }
+    .card-container .card#card-stats p{
+        display: flex;
+        font-size: 1.5rem;
+        padding-left: 0.5rem;
+        align-items: end;
+        margin-bottom: 5px;
+        font-weight: 700;
     }
 </style>
